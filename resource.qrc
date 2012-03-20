@@ -1,0 +1,15 @@
+<RCC>
+    <qresource prefix="/icon">
+        <file>icon/save.png</file>
+        <file>icon/open.png</file>
+        <file>icon/filter.png</file>
+        <file>icon/median.png</file>
+        <file>icon/undo.png</file>
+        <file>icon/redo.png</file>
+        <file>icon/copy.png</file>
+        <file>icon/paste.png</file>
+        <file>icon/norm.png</file>
+        <file>icon/zoom_in.png</file>
+        <file>icon/zoom_out.png</file>
+    </qresource>
+</RCC>
