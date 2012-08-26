@@ -205,7 +205,7 @@ void MainWindow::setTabVisible(bool view)
 
 void MainWindow::about()
 {
-	QMessageBox::about(this, tr("バージョン情報"), tr(COMMON_ABOUT_TEXT));
+	QMessageBox::about(this, tr("バージョン情報"), tr(common::ABOUT_TEXT));
 }
 
 void MainWindow::aboutQt()

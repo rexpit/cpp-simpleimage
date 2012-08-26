@@ -45,7 +45,7 @@ ImageWidget::ImageWidget(QWidget *parent) :
 	m_filePath(QString()),
 	m_imageLabel(new QLabel(this)),
 	m_magnification(1.),
-	m_flagAutoImageResize(false)
+	m_flagAutoImageResize(true)
 {
 	// m_stack->setUndoLimit(5);	// •Ê‚É§ŒÀ‚µ‚È‚­‚Ä‚¢‚¢‚ñ‚¶‚á‚Ë?
 	connect(m_stack, SIGNAL(canUndoChanged(bool)), this, SIGNAL(canUndoChanged(bool)));
@@ -119,8 +119,8 @@ QString ImageWidget::undoText() const { return m_stack->undoText(); }
 
 void ImageWidget::zoom(qreal m)
 {
-	if (m >= COMMON_MAGNIFICATION_MAX) { m = COMMON_MAGNIFICATION_MAX; }
-	if (m <= COMMON_MAGNIFICATION_MIN) { m = COMMON_MAGNIFICATION_MIN; }
+	if (m >= common::MAGNIFICATION_MAX) { m = common::MAGNIFICATION_MAX; }
+	if (m <= common::MAGNIFICATION_MIN) { m = common::MAGNIFICATION_MIN; }
 	m_magnification = m;
 	setAutoImageResize(false);
 	updateImageLabel();
@@ -129,8 +129,8 @@ void ImageWidget::zoom(qreal m)
 
 void ImageWidget::autoImageResize()
 {
-	const qreal magnificationX = (qreal)(size().width() - 2) / (qreal)m_image.width();
-	const qreal magnificationY = (qreal)(size().height() - 2) / (qreal)m_image.height();
+	const qreal magnificationX = static_cast<qreal>(size().width() - 2) / static_cast<qreal>(m_image.width());
+	const qreal magnificationY = static_cast<qreal>(size().height() - 2) / static_cast<qreal>(m_image.height());
 	m_magnification = qMin(qMin(magnificationX, magnificationY), 1.);
 	updateImageLabel();
 	emitZoomStateChanged();
@@ -138,12 +138,12 @@ void ImageWidget::autoImageResize()
 
 bool ImageWidget::canZoomIn() const
 {
-	return m_magnification < COMMON_MAGNIFICATION_MAX;
+	return m_magnification < common::MAGNIFICATION_MAX;
 }
 
 bool ImageWidget::canZoomOut() const
 {
-	return m_magnification > COMMON_MAGNIFICATION_MIN;
+	return m_magnification > common::MAGNIFICATION_MIN;
 }
 
 qreal ImageWidget::magnification() const { return m_magnification; }

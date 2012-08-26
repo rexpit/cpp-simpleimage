@@ -1,8 +1,8 @@
 /********************************************************************************
 ** Form generated from reading UI file 'mainwindow.ui'
 **
-** Created: Fri Mar 16 13:30:42 2012
-**      by: Qt User Interface Compiler version 4.8.0
+** Created: Sun Aug 26 21:40:54 2012
+**      by: Qt User Interface Compiler version 4.8.1
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
 ********************************************************************************/
@@ -170,6 +170,7 @@ public:
         autoImageResizeAct = new QAction(MainWindow);
         autoImageResizeAct->setObjectName(QString::fromUtf8("autoImageResizeAct"));
         autoImageResizeAct->setCheckable(true);
+        autoImageResizeAct->setChecked(false);
         menuBar = new QMenuBar(MainWindow);
         menuBar->setObjectName(QString::fromUtf8("menuBar"));
         menuBar->setGeometry(QRect(0, 0, 758, 24));

@@ -467,6 +467,9 @@
    <property name="checkable">
     <bool>true</bool>
    </property>
+   <property name="checked">
+    <bool>false</bool>
+   </property>
    <property name="text">
     <string>画面に合わせる(&amp;A)</string>
    </property>

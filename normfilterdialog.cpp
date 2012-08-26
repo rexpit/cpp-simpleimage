@@ -19,10 +19,10 @@ NormFilterDialog::~NormFilterDialog()
 void NormFilterDialog::setup()
 {
 	QStringList keyList;
-    keyList.append(tr("Œù”z (gradient)")); filterHash.insert(keyList.last(), FilterListItem(tr("0 -1 1"), tr("0\n-1\n1")));
-    keyList.append(tr("Roberts")); filterHash.insert(keyList.last(), FilterListItem(tr("0 0 0\n0 -1 0\n0 0 1"), tr("0 0 0\n0 0 1\n0 -1 0")));
-    keyList.append(tr("Prewitt")); filterHash.insert(keyList.last(), FilterListItem(tr("-1 0 1\n-1 0 1\n-1 0 1"), tr("-1 -1 -1\n0 0 0\n1 1 1")));
-    keyList.append(tr("Sobel")); filterHash.insert(keyList.last(), FilterListItem(tr("-1 0 1\n-2 0 2\n-1 0 1"), tr("-1 -2 -1\n0 0 0\n1 2 1")));
+	keyList.append(tr("Œù”z (gradient)")); filterHash.insert(keyList.last(), FilterListItem(tr("0 -1 1"), tr("0\n-1\n1")));
+	keyList.append(tr("Roberts")); filterHash.insert(keyList.last(), FilterListItem(tr("0 0 0\n0 -1 0\n0 0 1"), tr("0 0 0\n0 0 1\n0 -1 0")));
+	keyList.append(tr("Prewitt")); filterHash.insert(keyList.last(), FilterListItem(tr("-1 0 1\n-1 0 1\n-1 0 1"), tr("-1 -1 -1\n0 0 0\n1 1 1")));
+	keyList.append(tr("Sobel")); filterHash.insert(keyList.last(), FilterListItem(tr("-1 0 1\n-2 0 2\n-1 0 1"), tr("-1 -2 -1\n0 0 0\n1 2 1")));
 
 	for (QList<QString>::iterator it = keyList.begin(); it != keyList.end(); ++it) {
 		ui->listWidgetFilter->addItem(*it);

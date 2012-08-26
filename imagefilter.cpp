@@ -51,7 +51,7 @@ void FilterTwoLebelByErrorDiffusion::filter(QImage *img) const
 	const QRgb rgbMax = qRgb(255, 255, 255);
 	const int threshold = 128;
 	const int dx[] = {1,-1,0,1};
-	const int dy[] = {0,1,1,1};	// y ‚ª 1 ‚¸‚Âã‚ª‚é‚æ‚¤‚É‚µ‚ë (æŽZ‰ñ”ð‚Ì‚½‚ß‚Ì“ÁŽê‰»)
+	const int dy[] = {0,1,1,1};	// y ‚ª‘‰Á‚·‚é‚æ‚¤‚É‚µ‚ë (æŽZ‰ñ”ð‚Ì‚½‚ß‚Ì“ÁŽê‰»)
 	const int rate[] = {7,3,5,1};
 	FilterGrayscale gs;
 	gs.filter(img);
@@ -78,7 +78,7 @@ void FilterTwoLebelByErrorDiffusion::filter(QImage *img) const
 				const int mx = x + dx[i];
 				const int my = y + dy[i];
 				if (mx >= 0 && mx < img->width() && my >= 0 && my < img->height()) {
-					if (my > myBefore) {
+					while (my > myBefore) {
 						numMY += img->width();
 						++myBefore;
 					}
