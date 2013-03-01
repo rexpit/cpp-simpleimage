@@ -205,7 +205,7 @@ void MainWindow::setTabVisible(bool view)
 
 void MainWindow::about()
 {
-	QMessageBox::about(this, tr("�o�[�W�������"), tr(common::ABOUT_TEXT));
+	QMessageBox::about(this, tr("バージョン情報"), tr(common::ABOUT_TEXT));
 }
 
 void MainWindow::aboutQt()
@@ -271,8 +271,8 @@ void MainWindow::setMagnificationFromEdit()
 void MainWindow::resizeAndShowSubWidget(ImageWidget *widget, bool maximize)
 {
 	widget->setMinimumSize(qMax(qMin(widget->sizeHint().width(), (int)(mdiArea->width() * 0.8)), 100),
-		qMax(qMin(widget->sizeHint().height(), (int)(mdiArea->height() * 0.8)), 100));	// resize �ł̓T�C�Y�����ł��Ȃ����߁A
-	widget->showMaximized(); widget->showNormal();	// ��U�ő剻���Ă���ʏ�T�C�Y�ɖ߂��B
+		qMax(qMin(widget->sizeHint().height(), (int)(mdiArea->height() * 0.8)), 100));	// resize ではサイズ調整できないため、
+	widget->showMaximized(); widget->showNormal();	// 一旦最大化してから通常サイズに戻す。
 	widget->setMinimumSize(100, 100);
 	if (maximize) { widget->showMaximized(); }
 	widget->autoImageResize();

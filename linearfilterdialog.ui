@@ -193,9 +193,9 @@
   </connection>
   <connection>
    <sender>listWidgetFilter</sender>
-   <signal>itemClicked(QListWidgetItem*)</signal>
+   <signal>currentRowChanged(int)</signal>
    <receiver>LinearFilterDialog</receiver>
-   <slot>setExampleFilter(QListWidgetItem*)</slot>
+   <slot>setExampleFilter(int)</slot>
    <hints>
     <hint type="sourcelabel">
      <x>506</x>
@@ -226,6 +226,6 @@
  </connections>
  <slots>
   <slot>setAutoByMatrix()</slot>
-  <slot>setExampleFilter(QListWidgetItem*)</slot>
+  <slot>setExampleFilter(int)</slot>
  </slots>
 </ui>

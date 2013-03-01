@@ -18,28 +18,28 @@ NormFilterDialog::~NormFilterDialog()
 
 void NormFilterDialog::setup()
 {
-	QStringList keyList;
-	keyList.append(tr("Œù”z (gradient)")); filterHash.insert(keyList.last(), FilterListItem(tr("0 -1 1"), tr("0\n-1\n1")));
-	keyList.append(tr("Roberts")); filterHash.insert(keyList.last(), FilterListItem(tr("0 0 0\n0 -1 0\n0 0 1"), tr("0 0 0\n0 0 1\n0 -1 0")));
-	keyList.append(tr("Prewitt")); filterHash.insert(keyList.last(), FilterListItem(tr("-1 0 1\n-1 0 1\n-1 0 1"), tr("-1 -1 -1\n0 0 0\n1 1 1")));
-	keyList.append(tr("Sobel")); filterHash.insert(keyList.last(), FilterListItem(tr("-1 0 1\n-2 0 2\n-1 0 1"), tr("-1 -2 -1\n0 0 0\n1 2 1")));
+	filterList.append(FilterListItem(tr("å‹¾é… (gradient)"), tr("0 -1 1"), tr("0\n-1\n1")));
+	filterList.append(FilterListItem(tr("Roberts"), tr("0 0 0\n0 -1 0\n0 0 1"), tr("0 0 0\n0 0 1\n0 -1 0")));
+	filterList.append(FilterListItem(tr("Prewitt"), tr("-1 0 1\n-1 0 1\n-1 0 1"), tr("-1 -1 -1\n0 0 0\n1 1 1")));
+	filterList.append(FilterListItem(tr("Sobel"), tr("-1 0 1\n-2 0 2\n-1 0 1"), tr("-1 -2 -1\n0 0 0\n1 2 1")));
 
-	for (QList<QString>::iterator it = keyList.begin(); it != keyList.end(); ++it) {
-		ui->listWidgetFilter->addItem(*it);
+	for (QList<FilterListItem>::iterator it = filterList.begin(); it != filterList.end(); ++it) {
+		ui->listWidgetFilter->addItem(it->text);
 	}
 }
 
-void NormFilterDialog::setExampleFilter(QListWidgetItem *listItem)
+void NormFilterDialog::setExampleFilter(int currentRow)
 {
-	QHash<QString, FilterListItem>::iterator it = filterHash.find(listItem->text());
-	if (it == filterHash.end()) { return; }
-	ui->textEditX->setPlainText(it->matrixX);
-	ui->textEditY->setPlainText(it->matrixY);
+	// after
+	if (currentRow < 0 || currentRow >= filterList.count()) { return; }
+	const FilterListItem &filter = filterList[currentRow];
+	ui->textEditX->setPlainText(filter.matrixX);
+	ui->textEditY->setPlainText(filter.matrixY);
 }
 
 void NormFilterDialog::accept()
 {
-	// s—ñ‚Ìƒ`ƒFƒbƒN
+	// è¡Œåˆ—ã®ãƒã‚§ãƒƒã‚¯
 	const QVector< QVector<int> > matrixX(getMatrixX());
 	const QVector< QVector<int> > matrixY(getMatrixY());
 	class CheckMatrix {
@@ -47,21 +47,21 @@ void NormFilterDialog::accept()
 	public:
 		bool operator()(const QVector< QVector<int> > &matrix) const {
 			if (matrix.empty()) {
-				QMessageBox::warning(parent, tr("Error"), tr("s—ñ‚Ì‘®‚ª•s³‚Å‚·B"));
+				QMessageBox::warning(parent, tr("Error"), tr("è¡Œåˆ—ã®æ›¸å¼ãŒä¸æ­£ã§ã™ã€‚"));
 				return false;
 			}
 			if (matrix.size() % 2 == 0) {
-				QMessageBox::warning(parent, tr("Error"), tr("s—ñ‚Ìs”‚ğŠï”‚É‚µ‚Ä‚­‚¾‚³‚¢B"));
+				QMessageBox::warning(parent, tr("Error"), tr("è¡Œåˆ—ã®è¡Œæ•°ã‚’å¥‡æ•°ã«ã—ã¦ãã ã•ã„ã€‚"));
 				return false;
 			}
 			const int colNum = matrix.first().size();
 			if (colNum % 2 == 0) {
-				QMessageBox::warning(parent, tr("Error"), tr("s—ñ‚Ì—ñ”‚ğŠï”‚É‚µ‚Ä‚­‚¾‚³‚¢B"));
+				QMessageBox::warning(parent, tr("Error"), tr("è¡Œåˆ—ã®åˆ—æ•°ã‚’å¥‡æ•°ã«ã—ã¦ãã ã•ã„ã€‚"));
 				return false;
 			}
 			for (QVector< QVector<int> >::const_iterator it = matrix.begin(); it != matrix.end(); ++it) {
 				if (it->size() != colNum) {
-					QMessageBox::warning(parent, tr("Error"), tr("Šes‚Ì—ñ”‚ğ“ˆê‚µ‚Ä‚­‚¾‚³‚¢B"));
+					QMessageBox::warning(parent, tr("Error"), tr("å„è¡Œã®åˆ—æ•°ã‚’çµ±ä¸€ã—ã¦ãã ã•ã„ã€‚"));
 					return false;
 				}
 			}
@@ -75,14 +75,14 @@ void NormFilterDialog::accept()
 }
 
 QVector< QVector<int> > NormFilterDialog::getMatrixFromLineEdit(QTextEdit *edit) const
-{	// •¶š—ñ‚©‚çs—ñ‚ğ“¾‚é
+{	// æ–‡å­—åˆ—ã‹ã‚‰è¡Œåˆ—ã‚’å¾—ã‚‹
 	QVector< QVector<int> > result;
 	QTextCursor cr = edit->textCursor();
 	cr.movePosition(QTextCursor::Start, QTextCursor::MoveAnchor);
-	for (QTextBlock block = cr.block(); block.isValid(); block = block.next()) {	// s‚Ì‘–¸
+	for (QTextBlock block = cr.block(); block.isValid(); block = block.next()) {	// è¡Œã®èµ°æŸ»
 		const QString line = block.text();
 		const QRegExp regExpSpTab(tr("[ \\t]+"));
-		QStringList tokens = line.split(regExpSpTab);	// ƒXƒy[ƒX‚Åƒg[ƒNƒ“•ªŠ„
+		QStringList tokens = line.split(regExpSpTab);	// ã‚¹ãƒšãƒ¼ã‚¹ã§ãƒˆãƒ¼ã‚¯ãƒ³åˆ†å‰²
 		if (!tokens.isEmpty() && tokens.first().isEmpty()) { tokens.removeFirst(); }
 		if (!tokens.isEmpty() && tokens.last().isEmpty()) { tokens.removeLast(); }
 		if (tokens.isEmpty()) { continue; }

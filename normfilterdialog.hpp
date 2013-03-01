@@ -2,7 +2,7 @@
 #define NORMFILTERDIALOG_HPP
 
 #include <QDialog>
-#include <QHash>
+#include <QList>
 
 namespace Ui {
 class NormFilterDialog;
@@ -18,22 +18,23 @@ class NormFilterDialog : public QDialog
 public:
 	explicit NormFilterDialog(QWidget *parent = 0);
 	~NormFilterDialog();
-	QVector< QVector<int> > getMatrixX() const;	// 失敗時は空リストを返す
-	QVector< QVector<int> > getMatrixY() const;	// 失敗時は空リストを返す
+	QVector< QVector<int> > getMatrixX() const;	// 螟ｱ謨玲凾縺ｯ遨ｺ繝ｪ繧ｹ繝医ｒ霑斐☆
+	QVector< QVector<int> > getMatrixY() const;	// 螟ｱ謨玲凾縺ｯ遨ｺ繝ｪ繧ｹ繝医ｒ霑斐☆
 
 private slots:
-	void setExampleFilter(QListWidgetItem *listItem);
+	void setExampleFilter(int currentRow);
 	void accept();
 
 private:
 	Ui::NormFilterDialog *ui;
-	struct FilterListItem {
-		QString matrixX, matrixY;
-		FilterListItem(const QString &a_matrixX, const QString &a_matrixY) :
-			matrixX(a_matrixX), matrixY(a_matrixY) {}
-	};
-	QHash<QString, FilterListItem> filterHash;
 	void setup();
+	struct FilterListItem {
+		QString text;
+		QString matrixX, matrixY;
+		FilterListItem(const QString& a_text, const QString& a_matrixX, const QString &a_matrixY) :
+			text(a_text), matrixX(a_matrixX), matrixY(a_matrixY) {}
+	};
+	QList<FilterListItem> filterList;
 	QVector< QVector<int> > getMatrixFromLineEdit(QTextEdit *edit) const;
 };
 

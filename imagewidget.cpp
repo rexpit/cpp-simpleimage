@@ -7,7 +7,7 @@
 #include "normfilterdialog.hpp"
 #include "common.hpp"
 
-class CommandFilter : public QUndoCommand {	// filter ‚Í new ‚Åì‚éBdelete ‚µ‚Ä‚Í‚¢‚¯‚È‚¢B•s—v‚É‚È‚Á‚½‚ç‚±‚ÌƒNƒ‰ƒX‚ª delete ‚·‚éB
+class CommandFilter : public QUndoCommand {	// filter ã¯ new ã§ä½œã‚‹ã€‚delete ã—ã¦ã¯ã„ã‘ãªã„ã€‚ä¸è¦ã«ãªã£ãŸã‚‰ã“ã®ã‚¯ãƒ©ã‚¹ãŒ delete ã™ã‚‹ã€‚
 public:
 	CommandFilter(IImageFilter *filter, QImage *img, const QString &text = QString()) :
 		m_filter(filter), m_img(img), m_before(*img)
@@ -47,7 +47,7 @@ ImageWidget::ImageWidget(QWidget *parent) :
 	m_magnification(1.),
 	m_flagAutoImageResize(true)
 {
-	// m_stack->setUndoLimit(5);	// •Ê‚É§ŒÀ‚µ‚È‚­‚Ä‚¢‚¢‚ñ‚¶‚á‚Ë?
+	// m_stack->setUndoLimit(5);	// åˆ¥ã«åˆ¶é™ã—ãªãã¦ã„ã„ã‚“ã˜ã‚ƒã­?
 	connect(m_stack, SIGNAL(canUndoChanged(bool)), this, SIGNAL(canUndoChanged(bool)));
 	connect(m_stack, SIGNAL(canRedoChanged(bool)), this, SIGNAL(canRedoChanged(bool)));
 	connect(m_stack, SIGNAL(cleanChanged(bool)), this, SIGNAL(cleanChanged(bool)));
@@ -75,12 +75,12 @@ void ImageWidget::setImage(const QImage &image) {
 	m_image = image;
 	m_stack->clear();
 	m_filePath = QString();
-	setWindowTitle(tr("–³‘è"));
+	setWindowTitle(tr("ç„¡é¡Œ"));
 	updateImageLabel();
 }
 
 void ImageWidget::paste(const QImage &image) {
-	CommandImageChange *cmd = new CommandImageChange(this, &m_image, image, tr("“\‚è•t‚¯"));
+	CommandImageChange *cmd = new CommandImageChange(this, &m_image, image, tr("è²¼ã‚Šä»˜ã‘"));
 	m_stack->push(cmd);
 	updateImageLabel();
 	autoImageResize();
@@ -171,7 +171,7 @@ void ImageWidget::redo()
 
 void ImageWidget::filterGrayscale()
 {
-	CommandFilter *cmd = new CommandFilter(new FilterGrayscale(), &m_image, tr("ƒOƒŒ[ƒXƒP[ƒ‹‰»"));
+	CommandFilter *cmd = new CommandFilter(new FilterGrayscale(), &m_image, tr("ã‚°ãƒ¬ãƒ¼ã‚¹ã‚±ãƒ¼ãƒ«åŒ–"));
 	m_stack->push(cmd);
 	updateImageLabel();
 }
@@ -193,7 +193,7 @@ void ImageWidget::filterTo1Bit()
 			QMessageBox::warning(this, tr("Error"), tr("No good."));
 			return;
 		}
-		CommandFilter *cmd = new CommandFilter(filter, &m_image, tr("2’l‰»"));
+		CommandFilter *cmd = new CommandFilter(filter, &m_image, tr("2å€¤åŒ–"));
 		m_stack->push(cmd);
 	}
 	updateImageLabel();
@@ -207,7 +207,7 @@ void ImageWidget::linearFilter()
 		const int denominator = dialog.getDenominator();
 		const bool absolute = dialog.getAbsolute();
 		if (mask.isEmpty() || denominator == 0) { return; }
-		CommandFilter *cmd = new CommandFilter(new LinearFilter(mask, denominator, absolute), &m_image, tr("üŒ`ƒtƒBƒ‹ƒ^"));
+		CommandFilter *cmd = new CommandFilter(new LinearFilter(mask, denominator, absolute), &m_image, tr("ç·šå½¢ãƒ•ã‚£ãƒ«ã‚¿"));
 		m_stack->push(cmd);
 	}
 	updateImageLabel();
@@ -215,7 +215,7 @@ void ImageWidget::linearFilter()
 
 void ImageWidget::medianFilter()
 {
-	CommandFilter *cmd = new CommandFilter(new MedianFilter(3), &m_image, tr("ƒƒfƒBƒAƒ“ƒtƒBƒ‹ƒ^"));
+	CommandFilter *cmd = new CommandFilter(new MedianFilter(3), &m_image, tr("ãƒ¡ãƒ‡ã‚£ã‚¢ãƒ³ãƒ•ã‚£ãƒ«ã‚¿"));
 	m_stack->push(cmd);
 	updateImageLabel();
 }
@@ -227,7 +227,7 @@ void ImageWidget::normFilter()
 		const QVector< QVector<int> > maskX(dialog.getMatrixX());
 		const QVector< QVector<int> > maskY(dialog.getMatrixY());
 		if (maskX.isEmpty() || maskY.isEmpty()) { return; }
-		CommandFilter *cmd = new CommandFilter(new NormFilter(maskX, maskY), &m_image, tr("ƒmƒ‹ƒ€ƒtƒBƒ‹ƒ^"));
+		CommandFilter *cmd = new CommandFilter(new NormFilter(maskX, maskY), &m_image, tr("ãƒŽãƒ«ãƒ ãƒ•ã‚£ãƒ«ã‚¿"));
 		m_stack->push(cmd);
 	}
 	updateImageLabel();

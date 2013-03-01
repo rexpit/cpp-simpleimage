@@ -18,19 +18,18 @@ LinearFilterDialog::~LinearFilterDialog()
 
 void LinearFilterDialog::setup()
 {
-	QStringList keyList;
-	keyList.append(tr("•½ŠŠ‰»ƒtƒBƒ‹ƒ^ (3x3 ‰Ád•½‹Ï)")); filterHash.insert(keyList.last(), FilterListItem(tr("1 2 1\n2 4 2\n1 2 1"), 16, false));
-	keyList.append(tr("•½ŠŠ‰»ƒtƒBƒ‹ƒ^ (3x3 •½‹Ï)")); filterHash.insert(keyList.last(), FilterListItem(tr("1 1 1\n1 1 1\n1 1 1"), 9, false));
-	keyList.append(tr("•½ŠŠ‰»ƒtƒBƒ‹ƒ^ (5x5 •½‹Ï)")); filterHash.insert(keyList.last(), FilterListItem(tr("1 1 1 1 1\n1 1 1 1 1\n1 1 1 1 1\n1 1 1 1 1\n1 1 1 1 1"), 25, false));
-	keyList.append(tr("‘N‰s‰»ƒtƒBƒ‹ƒ^ (4‹ß–T)")); filterHash.insert(keyList.last(), FilterListItem(tr("0 -1 0\n-1 5 -1\n0 -1 0"), 1, false));
-	keyList.append(tr("‘N‰s‰»ƒtƒBƒ‹ƒ^ (8‹ß–T)")); filterHash.insert(keyList.last(), FilterListItem(tr("-1 -1 -1\n-1 9 -1\n-1 -1 -1"), 1, false));
-	keyList.append(tr("”÷•ªƒtƒBƒ‹ƒ^ (‰¡)")); filterHash.insert(keyList.last(), FilterListItem(tr("0 -1 1"), 1, true));
-	keyList.append(tr("”÷•ªƒtƒBƒ‹ƒ^ (c)")); filterHash.insert(keyList.last(), FilterListItem(tr("0\n-1\n1"), 1, true));
-	keyList.append(tr("ƒ‰ƒvƒ‰ƒVƒAƒ“ƒtƒBƒ‹ƒ^ (4‹ß–T)")); filterHash.insert(keyList.last(), FilterListItem(tr("0 1 0\n1 -4 1\n0 1 0"), 1, true));
-	keyList.append(tr("ƒ‰ƒvƒ‰ƒVƒAƒ“ƒtƒBƒ‹ƒ^ (8‹ß–T)")); filterHash.insert(keyList.last(), FilterListItem(tr("1 1 1\n1 -8 1\n1 1 1"), 1, true));
+	filterList.append(FilterListItem(tr("å¹³æ»‘åŒ–ãƒ•ã‚£ãƒ«ã‚¿ (3x3 åŠ é‡å¹³å‡)"), tr("1 2 1\n2 4 2\n1 2 1"), 16, false));
+	filterList.append(FilterListItem(tr("å¹³æ»‘åŒ–ãƒ•ã‚£ãƒ«ã‚¿ (3x3 å¹³å‡)"), tr("1 1 1\n1 1 1\n1 1 1"), 9, false));
+	filterList.append(FilterListItem(tr("å¹³æ»‘åŒ–ãƒ•ã‚£ãƒ«ã‚¿ (5x5 å¹³å‡)"), tr("1 1 1 1 1\n1 1 1 1 1\n1 1 1 1 1\n1 1 1 1 1\n1 1 1 1 1"), 25, false));
+	filterList.append(FilterListItem(tr("é®®é‹­åŒ–ãƒ•ã‚£ãƒ«ã‚¿ (4è¿‘å‚)"), tr("0 -1 0\n-1 5 -1\n0 -1 0"), 1, false));
+	filterList.append(FilterListItem(tr("é®®é‹­åŒ–ãƒ•ã‚£ãƒ«ã‚¿ (8è¿‘å‚)"), tr("-1 -1 -1\n-1 9 -1\n-1 -1 -1"), 1, false));
+	filterList.append(FilterListItem(tr("å¾®åˆ†ãƒ•ã‚£ãƒ«ã‚¿ (æ¨ª)"), tr("0 -1 1"), 1, true));
+	filterList.append(FilterListItem(tr("å¾®åˆ†ãƒ•ã‚£ãƒ«ã‚¿ (ç¸¦)"), tr("0\n-1\n1"), 1, true));
+	filterList.append(FilterListItem(tr("ãƒ©ãƒ—ãƒ©ã‚·ã‚¢ãƒ³ãƒ•ã‚£ãƒ«ã‚¿ (4è¿‘å‚)"), tr("0 1 0\n1 -4 1\n0 1 0"), 1, true));
+	filterList.append(FilterListItem(tr("ãƒ©ãƒ—ãƒ©ã‚·ã‚¢ãƒ³ãƒ•ã‚£ãƒ«ã‚¿ (8è¿‘å‚)"), tr("1 1 1\n1 -8 1\n1 1 1"), 1, true));
 
-	for (QList<QString>::iterator it = keyList.begin(); it != keyList.end(); ++it) {
-		ui->listWidgetFilter->addItem(*it);
+	for (QList<FilterListItem>::iterator it = filterList.begin(); it != filterList.end(); ++it) {
+		ui->listWidgetFilter->addItem(it->text);
 	}
 }
 
@@ -53,13 +52,14 @@ void LinearFilterDialog::setAutoByMatrix()
 	}
 }
 
-void LinearFilterDialog::setExampleFilter(QListWidgetItem *listItem)
+void LinearFilterDialog::setExampleFilter(const int currentRow)
 {
-	QHash<QString, FilterListItem>::iterator it = filterHash.find(listItem->text());
-	if (it == filterHash.end()) { return; }
-	ui->textEditM->setPlainText(it->matrix);
-	ui->lineEditD->setText(QString::number(it->denominator));
-	if (it->absolute) {
+	// after
+	if (currentRow < 0 || currentRow >= filterList.count()) { return; }
+	const FilterListItem &filter = filterList[currentRow];
+	ui->textEditM->setPlainText(filter.matrix);
+	ui->lineEditD->setText(QString::number((filter.denominator)));
+	if (filter.absolute) {
 		ui->radioButtonA->click();
 	} else {
 		ui->radioButtonZ->click();
@@ -68,34 +68,34 @@ void LinearFilterDialog::setExampleFilter(QListWidgetItem *listItem)
 
 void LinearFilterDialog::accept()
 {
-	// s—ñ‚Ìƒ`ƒFƒbƒN
+	// è¡Œåˆ—ã®ãƒã‚§ãƒƒã‚¯
 	const QVector< QVector<int> > matrix(getMatrix());
 	if (matrix.empty()) {
-		QMessageBox::warning(this, tr("Error"), tr("s—ñ‚Ì‘®‚ª•s³‚Å‚·B"));
+		QMessageBox::warning(this, tr("Error"), tr("è¡Œåˆ—ã®æ›¸å¼ãŒä¸æ­£ã§ã™ã€‚"));
 		return;
 	}
 	if (matrix.size() % 2 == 0) {
-		QMessageBox::warning(this, tr("Error"), tr("s—ñ‚Ìs”‚ğŠï”‚É‚µ‚Ä‚­‚¾‚³‚¢B"));
+		QMessageBox::warning(this, tr("Error"), tr("è¡Œåˆ—ã®è¡Œæ•°ã‚’å¥‡æ•°ã«ã—ã¦ãã ã•ã„ã€‚"));
 		return;
 	}
 	const int colNum = matrix.first().size();
 	if (colNum % 2 == 0) {
-		QMessageBox::warning(this, tr("Error"), tr("s—ñ‚Ì—ñ”‚ğŠï”‚É‚µ‚Ä‚­‚¾‚³‚¢B"));
+		QMessageBox::warning(this, tr("Error"), tr("è¡Œåˆ—ã®åˆ—æ•°ã‚’å¥‡æ•°ã«ã—ã¦ãã ã•ã„ã€‚"));
 		return;
 	}
 	for (QVector< QVector<int> >::const_iterator it = matrix.begin(); it != matrix.end(); ++it) {
 		if (it->size() != colNum) {
-			QMessageBox::warning(this, tr("Error"), tr("Šes‚Ì—ñ”‚ğ“ˆê‚µ‚Ä‚­‚¾‚³‚¢B"));
+			QMessageBox::warning(this, tr("Error"), tr("å„è¡Œã®åˆ—æ•°ã‚’çµ±ä¸€ã—ã¦ãã ã•ã„ã€‚"));
 			return;
 		}
 	}
-	// •ª•ê‚Ìƒ`ƒFƒbƒN
+	// åˆ†æ¯ã®ãƒã‚§ãƒƒã‚¯
 	if (!QRegExp(tr("^-?\\d+$")).exactMatch(this->ui->lineEditD->text())) {
-		QMessageBox::warning(this, tr("Error"), tr("•ª•ê‚ğ®”‚É‚µ‚Ä‚­‚¾‚³‚¢B"));
+		QMessageBox::warning(this, tr("Error"), tr("åˆ†æ¯ã‚’æ•´æ•°ã«ã—ã¦ãã ã•ã„ã€‚"));
 		return;
 	}
 	if (this->ui->lineEditD->text().toInt() == 0) {
-		QMessageBox::warning(this, tr("Error"), tr("•ª•ê‚ğ 0 ˆÈŠO‚É‚µ‚Ä‚­‚¾‚³‚¢B"));
+		QMessageBox::warning(this, tr("Error"), tr("åˆ†æ¯ã‚’ 0 ä»¥å¤–ã«ã—ã¦ãã ã•ã„ã€‚"));
 		return;
 	}
 
@@ -103,14 +103,14 @@ void LinearFilterDialog::accept()
 }
 
 QVector< QVector<int> > LinearFilterDialog::getMatrix() const
-{	// •¶š—ñ‚©‚çs—ñ‚ğ“¾‚é
+{	// æ–‡å­—åˆ—ã‹ã‚‰è¡Œåˆ—ã‚’å¾—ã‚‹
 	QVector< QVector<int> > result;
 	QTextCursor cr = this->ui->textEditM->textCursor();
 	cr.movePosition(QTextCursor::Start, QTextCursor::MoveAnchor);
-	for (QTextBlock block = cr.block(); block.isValid(); block = block.next()) {	// s‚Ì‘–¸
+	for (QTextBlock block = cr.block(); block.isValid(); block = block.next()) {	// è¡Œã®èµ°æŸ»
 		const QString line = block.text();
 		const QRegExp regExpSpTab(tr("[ \\t]+"));
-		QStringList tokens = line.split(regExpSpTab);	// ƒXƒy[ƒX‚Åƒg[ƒNƒ“•ªŠ„
+		QStringList tokens = line.split(regExpSpTab);	// ã‚¹ãƒšãƒ¼ã‚¹ã§ãƒˆãƒ¼ã‚¯ãƒ³åˆ†å‰²
 		if (!tokens.isEmpty() && tokens.first().isEmpty()) { tokens.removeFirst(); }
 		if (!tokens.isEmpty() && tokens.last().isEmpty()) { tokens.removeLast(); }
 		if (tokens.isEmpty()) { continue; }
