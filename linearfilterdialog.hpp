@@ -2,7 +2,7 @@
 #define LINEARFILTERDIALOG_HPP
 
 #include <QDialog>
-#include <QHash>
+#include <QList>
 
 namespace Ui {
 class LinearFilterDialog;
@@ -17,25 +17,26 @@ class LinearFilterDialog : public QDialog
 public:
 	explicit LinearFilterDialog(QWidget *parent = 0);
 	~LinearFilterDialog();
-	QVector< QVector<int> > getMatrix() const;	// ¸”s‚Í‹óƒŠƒXƒg‚ğ•Ô‚·
+	QVector< QVector<int> > getMatrix() const;	// å¤±æ•—æ™‚ã¯ç©ºãƒªã‚¹ãƒˆã‚’è¿”ã™
 	int getDenominator() const;
 	bool getAbsolute() const;
 
 private slots:
 	void setAutoByMatrix();
-	void setExampleFilter(QListWidgetItem *listItem);
+	void setExampleFilter(int currentRow);
 	void accept();
 
 private:
 	struct FilterListItem {
+		QString text;
 		QString matrix;
 		int denominator;
 		bool absolute;
-		FilterListItem(const QString &matrix, int denominator, bool absolute) :
-			matrix(matrix), denominator(denominator), absolute(absolute) {}
+		FilterListItem(const QString& text, const QString &matrix, int denominator, bool absolute) :
+			text(text), matrix(matrix), denominator(denominator), absolute(absolute) {}
 	};
 	Ui::LinearFilterDialog *ui;
-	QHash<QString, FilterListItem> filterHash;
+	QList<FilterListItem> filterList;
 	void setup();
 };
 

@@ -150,9 +150,9 @@
   </connection>
   <connection>
    <sender>listWidgetFilter</sender>
-   <signal>itemClicked(QListWidgetItem*)</signal>
+   <signal>currentRowChanged(int)</signal>
    <receiver>NormFilterDialog</receiver>
-   <slot>setExampleFilter(QListWidgetItem*)</slot>
+   <slot>setExampleFilter(int)</slot>
    <hints>
     <hint type="sourcelabel">
      <x>537</x>
@@ -166,6 +166,6 @@
   </connection>
  </connections>
  <slots>
-  <slot>setExampleFilter(QListWidgetItem*)</slot>
+  <slot>setExampleFilter(int)</slot>
  </slots>
 </ui>

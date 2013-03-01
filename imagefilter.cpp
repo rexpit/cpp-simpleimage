@@ -13,7 +13,7 @@ void FilterGrayscale::filter(QImage *img) const
 			const int g = qGreen(rgb);
 			const int b = qBlue(rgb);
 			const int gray = (77 * r + 150 * g + 29 * b) >> 8;
-			/* ³‚µ‚­‚Í Y = ( 0.298912 * R + 0.586611 * G + 0.114478 * B ) ‚¾‚ª®”‚Å‚â‚è‚½‚­‚Ä‚±‚¤‹ß—‚µ‚½B */
+			/* æ­£ã—ãã¯ Y = ( 0.298912 * R + 0.586611 * G + 0.114478 * B ) ã ãŒæ•´æ•°ã§ã‚„ã‚ŠãŸãã¦ã“ã†è¿‘ä¼¼ã—ãŸã€‚ */
 			img->setPixel(x, y, qRgb(gray, gray, gray));
 		}
 	}
@@ -51,26 +51,26 @@ void FilterTwoLebelByErrorDiffusion::filter(QImage *img) const
 	const QRgb rgbMax = qRgb(255, 255, 255);
 	const int threshold = 128;
 	const int dx[] = {1,-1,0,1};
-	const int dy[] = {0,1,1,1};	// y ‚ª‘‰Á‚·‚é‚æ‚¤‚É‚µ‚ë (æZ‰ñ”ğ‚Ì‚½‚ß‚Ì“Áê‰»)
+	const int dy[] = {0,1,1,1};	// y ãŒå¢—åŠ ã™ã‚‹ã‚ˆã†ã«ã—ã‚ (ä¹—ç®—å›é¿ã®ãŸã‚ã®ç‰¹æ®ŠåŒ–)
 	const int rate[] = {7,3,5,1};
 	FilterGrayscale gs;
 	gs.filter(img);
-	QVector<int> temp(img->width() * img->height());	// int Œ^ƒoƒbƒtƒ@
+	QVector<int> temp(img->width() * img->height());	// int å‹ãƒãƒƒãƒ•ã‚¡
 	size_t numY = 0;
-	for (int y = 0; y < img->height(); ++y) {	// ‰æ‘œ‚ğƒoƒbƒtƒ@‚É“]Ê
+	for (int y = 0; y < img->height(); ++y) {	// ç”»åƒã‚’ãƒãƒƒãƒ•ã‚¡ã«è»¢å†™
 		for (int x = 0; x < img->width(); ++x) {
 			temp[numY + x] = qRed(img->pixel(x, y));
 		}
 		numY += img->width();
 	}
 	numY = 0;
-	for (int y = 0; y < img->height(); ++y) {	// Œë·ŠgU–@
+	for (int y = 0; y < img->height(); ++y) {	// èª¤å·®æ‹¡æ•£æ³•
 		for (int x = 0; x < img->width(); ++x) {
 			const int f = temp[numY + x];
 			const int e = (f < threshold)
 				? f
 				: f - 255;
-			img->setPixel(x, y, (f < threshold) ? rgbMin : rgbMax);	// ‰æ‘fŒˆ’è
+			img->setPixel(x, y, (f < threshold) ? rgbMin : rgbMax);	// ç”»ç´ æ±ºå®š
 
 			int numMY = numY;
 			int myBefore = y + dy[0];
@@ -103,7 +103,7 @@ LinearFilter::LinearFilter(const QVector< QVector<int> > &mask, const int denomi
 bool LinearFilter::checkMask() const
 {
 	if (m_denominator == 0) { return false; }
-	if (m_mask.size() % 2 == 0) { return false; }	// “¯‚É m_mask.size() == 0 ‚Ìê‡‚àœŠO‚µ‚Ä‚¢‚éB
+	if (m_mask.size() % 2 == 0) { return false; }	// åŒæ™‚ã« m_mask.size() == 0 ã®å ´åˆã‚‚é™¤å¤–ã—ã¦ã„ã‚‹ã€‚
 	const size_t cols = m_mask[0].size();
 	if (cols % 2u == 0u) { return false; }
 	for (QVector< QVector<int> >::const_iterator it = m_mask.begin(); it != m_mask.end(); ++it) {
@@ -115,7 +115,7 @@ bool LinearFilter::checkMask() const
 void LinearFilter::filter(QImage *img) const
 {
 	if (!m_available) { return; }
-	struct AfterProcess {	// 3F‹¤’Ê‚ÌŒãˆ——pƒ[ƒJƒ‹ŠÖ”
+	struct AfterProcess {	// 3è‰²å…±é€šã®å¾Œå‡¦ç†ç”¨ãƒ­ãƒ¼ã‚«ãƒ«é–¢æ•°
 		inline int operator()(const int x) const
 		{
 			int y = x / m_denominator;
@@ -133,7 +133,7 @@ void LinearFilter::filter(QImage *img) const
 	} afterProcess(m_denominator, m_absolute);
 	const int centerY = (int)(m_mask.size() >> 1);
 	const int centerX = (int)(m_mask.begin()->size() >> 1);
-	QImage temp(img->width(), img->height(), img->format());	// ƒoƒbƒtƒ@
+	QImage temp(img->width(), img->height(), img->format());	// ãƒãƒƒãƒ•ã‚¡
 	for (int y = 0; y < img->height(); ++y) {
 		for (int x = 0; x < img->width(); ++x) {
 			int sumR = 0, sumG = 0, sumB = 0;
@@ -157,7 +157,7 @@ void LinearFilter::filter(QImage *img) const
 			temp.setPixel(x, y, qRgb(afterProcess(sumR), afterProcess(sumG), afterProcess(sumB)));
 		}
 	}
-	*img = temp;	// ƒoƒbƒtƒ@‚©‚ç“]Ê
+	*img = temp;	// ãƒãƒƒãƒ•ã‚¡ã‹ã‚‰è»¢å†™
 }
 
 // MedianFilter
@@ -190,7 +190,7 @@ void MedianFilter::filter(QImage *img) const
 	QVector<int> neighborListR(m_size * m_size);
 	QVector<int> neighborListG(m_size * m_size);
 	QVector<int> neighborListB(m_size * m_size);
-	QImage temp(img->width(), img->height(), img->format());	// ƒoƒbƒtƒ@
+	QImage temp(img->width(), img->height(), img->format());	// ãƒãƒƒãƒ•ã‚¡
 	for (int y = 0; y < img->height(); ++y) {
 		for (int x = 0; x < img->width(); ++x) {
 			int index = 0;
@@ -215,7 +215,7 @@ void MedianFilter::filter(QImage *img) const
 			temp.setPixel(x, y, qRgb(neighborListR[centerFilter], neighborListG[centerFilter], neighborListB[centerFilter]));
 		}
 	}
-	*img = temp;	// ƒoƒbƒtƒ@‚©‚ç“]Ê
+	*img = temp;	// ãƒãƒƒãƒ•ã‚¡ã‹ã‚‰è»¢å†™
 }
 
 NormFilter::NormFilter(const QVector<QVector<int> > &maskX, const QVector<QVector<int> > &maskY) :
@@ -267,7 +267,7 @@ void NormFilter::filter(QImage *img) const
 	const int maskXCenterX = (int)(m_maskX.begin()->size() >> 1);
 	const int maskYCenterY = (int)(m_maskY.size() >> 1);
 	const int maskYCenterX = (int)(m_maskY.begin()->size() >> 1);
-	QImage temp(img->width(), img->height(), img->format());	// ƒoƒbƒtƒ@
+	QImage temp(img->width(), img->height(), img->format());	// ãƒãƒƒãƒ•ã‚¡
 	for (int y = 0; y < img->height(); ++y) {
 		for (int x = 0; x < img->width(); ++x) {
 			MyFilter dx(*img, m_maskX, x, y, maskXCenterX, maskXCenterY);
