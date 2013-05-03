@@ -273,7 +273,7 @@ void ImageWidget::wheelEvent(QWheelEvent *event)
 void ImageWidget::updateImageLabel()
 {
 	QPixmap pixmap(QPixmap::fromImage(m_image));
-	pixmap = pixmap.scaled(m_image.size() * m_magnification, Qt::KeepAspectRatio, Qt::SmoothTransformation);
+	pixmap = pixmap.scaled(m_image.size() * m_magnification, Qt::KeepAspectRatio, (m_magnification > 1.) ? Qt::FastTransformation : Qt::SmoothTransformation);
 	m_imageLabel->resize(sizeHint());
 	m_imageLabel->setPixmap(pixmap);
 }
