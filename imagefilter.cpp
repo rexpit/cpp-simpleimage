@@ -12,7 +12,7 @@ void FilterGrayscale::filter(QImage *img) const
 			const int r = qRed(rgb);
 			const int g = qGreen(rgb);
 			const int b = qBlue(rgb);
-			const int gray = (77 * r + 150 * g + 29 * b) >> 8;
+			const int gray = (77 * r + 150 * g + 29 * b) / 256;
 			/* 正しくは Y = ( 0.298912 * R + 0.586611 * G + 0.114478 * B ) だが整数でやりたくてこう近似した。 */
 			img->setPixel(x, y, qRgb(gray, gray, gray));
 		}
@@ -82,7 +82,7 @@ void FilterTwoLebelByErrorDiffusion::filter(QImage *img) const
 						numMY += img->width();
 						++myBefore;
 					}
-					temp[numMY + mx] += ((rate[i] * e) >> 4);
+					temp[numMY + mx] += ((rate[i] * e) / 16);
 				}
 			}
 		}
@@ -131,8 +131,8 @@ void LinearFilter::filter(QImage *img) const
 		const int m_denominator;
 		const bool m_absolute;
 	} afterProcess(m_denominator, m_absolute);
-	const int centerY = (int)(m_mask.size() >> 1);
-	const int centerX = (int)(m_mask.begin()->size() >> 1);
+	const int centerY = (int)(m_mask.size() / 2);
+	const int centerX = (int)(m_mask.begin()->size() / 2);
 	QImage temp(img->width(), img->height(), img->format());	// バッファ
 	for (int y = 0; y < img->height(); ++y) {
 		for (int x = 0; x < img->width(); ++x) {
@@ -175,18 +175,9 @@ bool MedianFilter::checkSize() const
 void MedianFilter::filter(QImage *img) const
 {
 	if (!m_available) { return; }
-	struct Insert {
-		void operator()(QVector<int> *vec, int val, int top) const {
-			vec->replace(top, val);
-			for (int index = top; index > 0 && vec->indexOf(index - 1) >= val; --index) {
-				vec->replace(index, vec->indexOf(index - 1));
-				vec->replace(index - 1, val);
-			}
-		}
-	} insert;
 
-	const int centerXY = m_size >> 1;
-	const size_t centerFilter = (m_size * m_size) >> 1;
+	const int centerXY = m_size / 2;
+	const size_t centerFilter = m_size * m_size / 2;
 	QVector<int> neighborListR(m_size * m_size);
 	QVector<int> neighborListG(m_size * m_size);
 	QVector<int> neighborListB(m_size * m_size);
@@ -207,7 +198,7 @@ void MedianFilter::filter(QImage *img) const
 							? img->width() - 1
 							: (x + dx);
 					const QRgb rgb = img->pixel(mx, my);
-					insert(&neighborListR, qRed(rgb), index); insert(&neighborListG, qGreen(rgb), index); insert(&neighborListB, qBlue(rgb), index);
+					neighborListR[index] = qRed(rgb); neighborListG[index] = qGreen(rgb); neighborListB[index] = qBlue(rgb);
 					++index;
 				}
 			}
@@ -263,10 +254,10 @@ void NormFilter::filter(QImage *img) const
 			return (z > 255) ? 255 : z;
 		}
 	} after;
-	const int maskXCenterY = (int)(m_maskX.size() >> 1);
-	const int maskXCenterX = (int)(m_maskX.begin()->size() >> 1);
-	const int maskYCenterY = (int)(m_maskY.size() >> 1);
-	const int maskYCenterX = (int)(m_maskY.begin()->size() >> 1);
+	const int maskXCenterY = (int)(m_maskX.size() / 2);
+	const int maskXCenterX = (int)(m_maskX.begin()->size() / 2);
+	const int maskYCenterY = (int)(m_maskY.size() / 2);
+	const int maskYCenterX = (int)(m_maskY.begin()->size() / 2);
 	QImage temp(img->width(), img->height(), img->format());	// バッファ
 	for (int y = 0; y < img->height(); ++y) {
 		for (int x = 0; x < img->width(); ++x) {
