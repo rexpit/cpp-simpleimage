@@ -67,4 +67,13 @@ private:
 	static bool checkMask(const QVector< QVector<int> > &mask);
 };
 
+class FilterInsertRandomNoise : public IImageFilter
+{
+public:
+	FilterInsertRandomNoise(double noiseDensity);
+	void filter(QImage *img) const;
+private:
+	const double m_noiseDensity;
+};
+
 #endif // IMAGEFILTER_HPP

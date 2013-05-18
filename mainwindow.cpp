@@ -14,6 +14,9 @@ MainWindow::MainWindow(QWidget *parent) :
 	mdiArea = new QMdiArea(this);
 	mdiArea->setHorizontalScrollBarPolicy(Qt::ScrollBarAsNeeded);
 	mdiArea->setVerticalScrollBarPolicy(Qt::ScrollBarAsNeeded);
+	mdiArea->setTabsClosable(true);
+	mdiArea->setTabsMovable(true);
+	mdiArea->setViewMode(ui->tabVisibleAct->isChecked() ? QMdiArea::TabbedView : QMdiArea::SubWindowView);
 	setCentralWidget(mdiArea);
 	connect(mdiArea, SIGNAL(subWindowActivated(QMdiSubWindow *)),
 			this, SLOT(updateMenus()));
@@ -174,6 +177,12 @@ void MainWindow::normFilter()
 	if (widget != NULL) { widget->normFilter(); }
 }
 
+void MainWindow::filterInsertRandomNoise()
+{
+	ImageWidget *widget = activeImageWidget();
+	if (widget != NULL) { widget->filterInsertRandomNoise(); }
+}
+
 void MainWindow::zoomIn()
 {
 	ImageWidget *widget = activeImageWidget();
@@ -229,6 +238,7 @@ void MainWindow::updateMenus()
 	ui->linearFilterAct->setEnabled(hasMdiChild);
 	ui->medianFilterAct->setEnabled(hasMdiChild);
 	ui->normFilterAct->setEnabled(hasMdiChild);
+	ui->filterInsertRandomNoiseAct->setEnabled(hasMdiChild);
 	ui->zoomInAct->setEnabled(hasMdiChild && newWidget->canZoomIn());
 	ui->zoomOutAct->setEnabled(hasMdiChild && newWidget->canZoomOut());
 	ui->zoomFullScaleAct->setEnabled(hasMdiChild);

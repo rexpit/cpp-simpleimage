@@ -27,5 +27,3 @@ private:
 };
 
 #endif // TO1BITDIALOG_HPP
-
-#include <QMessageBox>

@@ -1,5 +1,6 @@
 #include "imagefilter.hpp"
 #include <QImage>
+#include <QTime>
 #include <cmath>
 
 // FilterGrayscale
@@ -270,4 +271,22 @@ void NormFilter::filter(QImage *img) const
 		}
 	}
 	*img = temp;
+}
+
+// FilterInsertNoise
+
+FilterInsertRandomNoise::FilterInsertRandomNoise(const double noiseDensity) :
+	m_noiseDensity(noiseDensity)
+{
+}
+
+void FilterInsertRandomNoise::filter(QImage *img) const
+{
+	const int w = img->width(), h = img->height();
+    const int noiseNum = static_cast<int>(static_cast<double>(w * h) * m_noiseDensity);
+	qsrand(QTime().secsTo(QTime::currentTime()));
+	for (int i = 0; i < noiseNum; ++i) {
+		const int x = qrand() % w, y = qrand() % h;
+		img->setPixel(x, y, qRgb(qrand() % 256, qrand() % 256, qrand() % 256));
+	}
 }

@@ -18,7 +18,8 @@ SOURCES += main.cpp\
 	to1bitdialog.cpp \
 	linearfilterdialog.cpp \
 	imagewidget.cpp \
-	normfilterdialog.cpp
+	normfilterdialog.cpp \
+    insertrandomnoisedialog.cpp
 
 HEADERS  += mainwindow.hpp \
 	imagefilter.hpp \
@@ -26,12 +27,14 @@ HEADERS  += mainwindow.hpp \
 	linearfilterdialog.hpp \
 	imagewidget.hpp \
 	normfilterdialog.hpp \
-	common.hpp
+	common.hpp \
+    insertrandomnoisedialog.hpp
 
 FORMS    += mainwindow.ui \
 	to1bitdialog.ui \
 	linearfilterdialog.ui \
-	normfilterdialog.ui
+	normfilterdialog.ui \
+    insertrandomnoisedialog.ui
 
 RESOURCES += \
 	resource.qrc
