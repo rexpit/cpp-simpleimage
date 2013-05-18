@@ -5,6 +5,7 @@
 #include "to1bitdialog.hpp"
 #include "linearfilterdialog.hpp"
 #include "normfilterdialog.hpp"
+#include "insertrandomnoisedialog.hpp"
 #include "common.hpp"
 
 class CommandFilter : public QUndoCommand {	// filter は new で作る。delete してはいけない。不要になったらこのクラスが delete する。
@@ -131,7 +132,7 @@ void ImageWidget::autoImageResize()
 {
 	const qreal magnificationX = static_cast<qreal>(size().width() - 2) / static_cast<qreal>(m_image.width());
 	const qreal magnificationY = static_cast<qreal>(size().height() - 2) / static_cast<qreal>(m_image.height());
-	m_magnification = qMin(qMin(magnificationX, magnificationY), 1.);
+	m_magnification = qMin(qMax(qMin(magnificationX, magnificationY), common::MAGNIFICATION_MIN), common::MAGNIFICATION_MAX);
 	updateImageLabel();
 	emitZoomStateChanged();
 }
@@ -228,6 +229,17 @@ void ImageWidget::normFilter()
 		const QVector< QVector<int> > maskY(dialog.getMatrixY());
 		if (maskX.isEmpty() || maskY.isEmpty()) { return; }
 		CommandFilter *cmd = new CommandFilter(new NormFilter(maskX, maskY), &m_image, tr("ノルムフィルタ"));
+		m_stack->push(cmd);
+	}
+	updateImageLabel();
+}
+
+void ImageWidget::filterInsertRandomNoise()
+{
+	InsertRandomNoiseDialog dialog(this);
+	if (dialog.exec() == dialog.Accepted) {
+		const double density = dialog.getDensity();
+		CommandFilter *cmd = new CommandFilter(new FilterInsertRandomNoise(density), &m_image, tr("ランダムノイズの挿入"));
 		m_stack->push(cmd);
 	}
 	updateImageLabel();

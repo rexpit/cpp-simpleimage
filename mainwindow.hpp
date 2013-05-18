@@ -39,6 +39,7 @@ private slots:
 	void linearFilter();
 	void medianFilter();
 	void normFilter();
+	void filterInsertRandomNoise();
 	void zoomIn();
 	void zoomOut();
 	void zoomFullScale();
