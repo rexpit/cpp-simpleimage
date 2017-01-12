@@ -1,12 +1,17 @@
 #include "imagewidget.hpp"
-#include <QtGui>
 #include <QUndoStack>
+#include <QLabel>
+#include <QVBoxLayout>
+#include <QScrollArea>
+#include <QFileInfo>
+#include <QMessageBox>
 #include "imagefilter.hpp"
 #include "to1bitdialog.hpp"
 #include "linearfilterdialog.hpp"
 #include "normfilterdialog.hpp"
 #include "insertrandomnoisedialog.hpp"
 #include "common.hpp"
+#pragma execution_character_set("utf-8")
 
 class CommandFilter : public QUndoCommand {	// filter は new で作る。delete してはいけない。不要になったらこのクラスが delete する。
 public:
