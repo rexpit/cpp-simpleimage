@@ -1,8 +1,18 @@
 #include "mainwindow.hpp"
 #include "ui_mainwindow.h"
-#include <QtGui>
+#include <QWidget>
+#include <QMdiArea>
+#include <QMdiSubWindow>
+#include <QLineEdit>
+#include <QDragEnterEvent>
+#include <QMimeData>
+#include <QDir>
+#include <QClipboard>
+#include <QMessageBox>
+#include <QFileDialog>
 #include "imagewidget.hpp"
 #include "common.hpp"
+#pragma execution_character_set("utf-8")
 
 MainWindow::MainWindow(QWidget *parent) :
 	QMainWindow(parent),

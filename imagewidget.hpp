@@ -2,7 +2,6 @@
 #define WIDGET_HPP
 
 #include <QWidget>
-#include <QMessageBox>
 
 class QUndoStack;
 class QLabel;
