@@ -2,6 +2,7 @@
 #include "ui_normfilterdialog.h"
 #include <QTextBlock>
 #include <QMessageBox>
+#pragma execution_character_set("utf-8")
 
 NormFilterDialog::NormFilterDialog(QWidget *parent) :
 	QDialog(parent),

@@ -2,6 +2,7 @@
 #include "ui_linearfilterdialog.h"
 #include <QTextBlock>
 #include <QMessageBox>
+#pragma execution_character_set("utf-8")
 
 LinearFilterDialog::LinearFilterDialog(QWidget *parent) :
 	QDialog(parent),
