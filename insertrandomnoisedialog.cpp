@@ -1,19 +1,19 @@
-#include "insertrandomnoisedialog.hpp"
+#include "insertrandomnoisedialog.h"
 #include "ui_insertrandomnoisedialog.h"
 
 InsertRandomNoiseDialog::InsertRandomNoiseDialog(QWidget *parent) :
-	QDialog(parent),
-	ui(new Ui::InsertRandomNoiseDialog)
+    QDialog(parent),
+    ui(new Ui::InsertRandomNoiseDialog)
 {
-	ui->setupUi(this);
+    ui->setupUi(this);
 }
 
 InsertRandomNoiseDialog::~InsertRandomNoiseDialog()
 {
-	delete ui;
+    delete ui;
 }
 
 double InsertRandomNoiseDialog::getDensity() const
 {
-	return 0.01 * ui->spinBoxDensity->value();
+    return 0.01 * ui->spinBoxDensity->value();
 }
